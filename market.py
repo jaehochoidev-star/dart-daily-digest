@@ -1,6 +1,7 @@
 """Optional KRX data through pykrx. Missing data is never reported as zero results."""
 from datetime import date
 import json
+import os
 from pathlib import Path
 import sys
 
@@ -11,6 +12,9 @@ def collect(day):
     if date.fromisoformat(day).weekday() >= 5:
         result['gainers_status'] = 'closed'
         result['warnings'].append('주말: 시장 데이터 집계 대상이 아닙니다.')
+        return result
+    if not (os.environ.get('KRX_ID') and os.environ.get('KRX_PW')):
+        result['warnings'].append('KRX 로그인 미설정: 시가총액·순매수·급등 종목을 수집하려면 Actions Secrets에 KRX_ID와 KRX_PW를 등록하세요.')
         return result
     from pykrx import stock
     stamp = day.replace('-', '')

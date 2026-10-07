@@ -44,6 +44,8 @@ jobs:
         if: ${{ inputs.rebuild_only != true }}
         env:
           DART_API_KEY: ${{ secrets.DART_API_KEY }}
+          KRX_ID: ${{ secrets.KRX_ID }}
+          KRX_PW: ${{ secrets.KRX_PW }}
           REPORT_DATE: ${{ inputs.date }}
         shell: bash
         run: |

@@ -7,6 +7,7 @@ from unittest.mock import patch
 
 from digest import CATEGORIES, Dart, DartError, category, collect, holding_detail, save_report
 from build_site import build, report_body
+from market import collect as collect_market
 
 
 def fixture(day='2026-10-06'):
@@ -18,6 +19,16 @@ def fixture(day='2026-10-06'):
 
 
 class Tests(unittest.TestCase):
+    def test_missing_krx_credentials_are_not_zero_results(self):
+        with patch.dict('os.environ', {}, clear=True):
+            market = collect_market('2026-10-06')
+        self.assertEqual(market['gainers_status'], 'unavailable')
+        self.assertIn('KRX 로그인 미설정', market['warnings'][0])
+
+    def test_weekend_skips_market_requests(self):
+        market = collect_market('2026-10-04')
+        self.assertEqual(market['gainers_status'], 'closed')
+
     def test_pagination_and_receipt_dedup(self):
         dart = Dart('test')
         first = {'rcept_no': '20261006000001'}

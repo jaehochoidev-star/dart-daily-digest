@@ -10,6 +10,8 @@
 4. Actions의 저장소 쓰기 권한을 허용합니다. 브랜치 보호가 자동 기록 커밋을 막는 경우 봇 쓰기가 가능하도록 설정해야 합니다.
 5. **Actions → DART 장 마감 리포트 → Run workflow**로 첫 실행합니다. `date`를 비우면 한국시간 오늘을 수집합니다.
 
+시가총액·투자자 순매수·급등 종목도 수집하려면 같은 Actions Secrets에 **KRX_ID**, **KRX_PW**를 등록합니다. [KRX 정보데이터시스템](https://data.krx.co.kr)의 로그인 ID·비밀번호이며 DART 키와 별개입니다. 미설정 시 DART 공시만 정상 수집하고 시장 항목에는 로그인 미설정을 표시합니다. pykrx 실행 로그는 출력하지 않으므로 계정 정보가 리포트나 실행 로그에 노출되지 않습니다.
+
 기본 게시 주소: https://jaehochoidev-star.github.io/dart-daily-digest/
 
 ## 화면과 이력
