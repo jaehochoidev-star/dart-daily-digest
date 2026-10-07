@@ -1,6 +1,6 @@
 # DART Daily — 장 마감 리포트
 
-매일 **한국시간 19:00**에 GitHub Actions로 당일 공시를 수집하고 GitHub Pages에 게시합니다. `dart-financial-monitor`와 같은 날짜별 기록 보관 방식이며, PDF·텔레그램·이메일 발송은 하지 않습니다.
+매일 **한국시간 20:30**에 GitHub Actions로 당일 공시를 수집하고 GitHub Pages에 게시합니다. `dart-financial-monitor`와 같은 날짜별 기록 보관 방식이며, PDF·텔레그램·이메일 발송은 하지 않습니다.
 
 ## 한 번만 설정
 

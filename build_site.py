@@ -92,7 +92,7 @@ def shell(title, body, reports, prefix='', selected=''):
     return f'''<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{e(title)} | DART Daily</title><link rel="stylesheet" href="{prefix}assets/style.css"><script defer src="{prefix}assets/search.js"></script></head><body>
 <a class="skip" href="#main">본문 바로가기</a><header><a class="brand" href="{prefix}index.html"><span class="brand-mark">D</span>DART <b>DAILY</b></a><span class="header-note">매일 저녁, 공시를 한눈에</span><a href="{prefix}archive.html">전체 이력 ↗</a></header>
 <div class="layout"><aside><p class="eyebrow">REPORT ARCHIVE</p><h2>날짜별 리포트</h2><a class="latest" href="{prefix}index.html">최신 리포트 →</a><nav aria-label="월별 이력" class="months">{links}</nav><nav class="dates" aria-label="최근 60일">{dates}</nav><p class="meta">이전 기록은 월별 이력에서<br>확인할 수 있습니다.</p></aside><main id="main">{body}</main></div>
-<footer>출처: <a href="https://opendart.fss.or.kr">금융감독원 DART</a> · KRX (pykrx)<br>공시 제목 기반 자동 분류 · 정정공시 포함 · 미수집 값은 추정하지 않습니다.<br>매일 19:00 KST 실행 예정이며 GitHub Actions 상황에 따라 지연될 수 있습니다.</footer></body></html>'''
+<footer>출처: <a href="https://opendart.fss.or.kr">금융감독원 DART</a> · KRX (pykrx)<br>공시 제목 기반 자동 분류 · 정정공시 포함 · 미수집 값은 추정하지 않습니다.<br>매일 20:30 KST 실행 예정이며 GitHub Actions 상황에 따라 지연될 수 있습니다.</footer></body></html>'''
 
 
 def archive_body(reports, title):
@@ -132,7 +132,7 @@ def build(reports_root, output):
         write(f'months/{month}.html', shell(month, archive_body(items, month + ' 리포트'), reports, '../'))
     archive = archive_body(reports, '전체 리포트 이력').replace('href="../days/', 'href="days/')
     write('archive.html', shell('전체 이력', archive, reports))
-    latest = report_body(reports[0]) if reports else '<div class="eyebrow">DART DAILY</div><h1>첫 리포트를 기다리고 있습니다.</h1><p>매일 저녁 7시, 당일 공시를 모아 이곳에 기록합니다.</p><p>운영자는 DART_API_KEY 등록 후 GitHub Actions에서 첫 수집을 실행하세요.</p>'
+    latest = report_body(reports[0]) if reports else '<div class="eyebrow">DART DAILY</div><h1>첫 리포트를 기다리고 있습니다.</h1><p>매일 저녁 8시 30분, 당일 공시를 모아 이곳에 기록합니다.</p><p>운영자는 DART_API_KEY 등록 후 GitHub Actions에서 첫 수집을 실행하세요.</p>'
     write('index.html', shell('장 마감 리포트', latest, reports, selected=reports[0]['date'] if reports else ''))
     write('.nojekyll', '')
     print(f'{len(reports)}일의 정적 웹페이지 생성: {output}')
