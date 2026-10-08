@@ -64,3 +64,9 @@ python -m http.server 8000 --directory site
 - [DART 공시 검색](https://opendart.fss.or.kr/guide/detail.do?apiGrpCd=DS001&apiId=2019001)
 - [pykrx](https://github.com/sharebook-kr/pykrx)
 - [GitHub Pages Actions 배포](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages)
+
+## 예약 실행 지연 시 기준일
+
+예약 실행은 최초 실행 생성 시각을 한국시간으로 바꾼 뒤, 그 시각 이전의 가장 최근 20:30 날짜를 수집합니다. 예를 들어 10월 8일 예약 작업이 10월 9일 02:58에 시작되어도 10월 8일 공시를 저장합니다. 같은 실행을 재시도할 때도 최초 생성 시각을 사용합니다. 화면의 수집 시각은 실제 수집 시각입니다. 수동 실행은 입력한 날짜를 사용하며, 비우면 한국시간 오늘입니다.
+
+GitHub의 예약 지연 자체를 없애는 변경은 아닙니다. 지연이 다음 날 20:30까지 이어지거나 예약 실행이 누락된 경우에는 원래 예약일을 판별할 수 없으므로 수동으로 날짜를 지정해 복구해야 합니다.

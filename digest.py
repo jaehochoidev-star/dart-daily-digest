@@ -1,6 +1,6 @@
 """Collect one KST calendar day's disclosures; archive only complete DART lists."""
 import argparse
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from decimal import Decimal, InvalidOperation
 import json
 import os
@@ -152,13 +152,28 @@ def save_report(report, root):
     temp.replace(dest)
 
 
+def resolve_report_date(explicit_date=None, scheduled_run_created_at=None, now=None):
+    """Use the latest 20:30 KST slot at original run creation, even on reruns."""
+    if explicit_date:
+        return date.fromisoformat(explicit_date)
+    if scheduled_run_created_at:
+        anchor = datetime.fromisoformat(scheduled_run_created_at.replace('Z', '+00:00'))
+        if anchor.tzinfo is None:
+            raise ValueError('예약 실행 시각에는 시간대가 필요합니다.')
+        anchor = anchor.astimezone(KST)
+        slot = anchor.replace(hour=20, minute=30, second=0, microsecond=0)
+        return (slot - timedelta(days=1) if anchor < slot else slot).date()
+    return (now or datetime.now(KST)).astimezone(KST).date()
+
+
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--date', default=datetime.now(KST).date().isoformat())
+    parser.add_argument('--date')
+    parser.add_argument('--scheduled-run-created-at')
     parser.add_argument('--reports', default='reports')
     args = parser.parse_args()
     try:
-        day = date.fromisoformat(args.date)
+        day = resolve_report_date(args.date, args.scheduled_run_created_at)
         if day > datetime.now(KST).date():
             raise ValueError('미래 날짜는 조회할 수 없습니다.')
         key = os.environ.get('DART_API_KEY', '').strip()

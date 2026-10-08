@@ -27,6 +27,7 @@ jobs:
     timeout-minutes: 35
     permissions:
       contents: write
+      actions: read
     outputs:
       artifact: ${{ steps.artifact.outputs.name }}
     steps:
@@ -47,10 +48,15 @@ jobs:
           KRX_ID: ${{ secrets.KRX_ID }}
           KRX_PW: ${{ secrets.KRX_PW }}
           REPORT_DATE: ${{ inputs.date }}
+          GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           if [ -n "$REPORT_DATE" ]; then
             python digest.py --date "$REPORT_DATE"
+          elif [ "$GITHUB_EVENT_NAME" = "schedule" ]; then
+            RUN_CREATED_AT=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" --jq .created_at)
+            test -n "$RUN_CREATED_AT"
+            python digest.py --scheduled-run-created-at "$RUN_CREATED_AT"
           else
             python digest.py
           fi
