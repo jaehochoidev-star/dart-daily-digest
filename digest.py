@@ -153,7 +153,7 @@ def save_report(report, root):
 
 
 def resolve_report_date(explicit_date=None, scheduled_run_created_at=None, now=None):
-    """Use the latest 20:30 KST slot at original run creation, even on reruns."""
+    """Use the latest weekday 20:30 KST slot at original run creation, even on reruns."""
     if explicit_date:
         return date.fromisoformat(explicit_date)
     if scheduled_run_created_at:
@@ -162,7 +162,11 @@ def resolve_report_date(explicit_date=None, scheduled_run_created_at=None, now=N
             raise ValueError('예약 실행 시각에는 시간대가 필요합니다.')
         anchor = anchor.astimezone(KST)
         slot = anchor.replace(hour=20, minute=30, second=0, microsecond=0)
-        return (slot - timedelta(days=1) if anchor < slot else slot).date()
+        if anchor < slot:
+            slot -= timedelta(days=1)
+        while slot.weekday() >= 5:
+            slot -= timedelta(days=1)
+        return slot.date()
     return (now or datetime.now(KST)).astimezone(KST).date()
 
 
@@ -176,6 +180,9 @@ def main():
         day = resolve_report_date(args.date, args.scheduled_run_created_at)
         if day > datetime.now(KST).date():
             raise ValueError('미래 날짜는 조회할 수 없습니다.')
+        if day.weekday() >= 5:
+            print(f'{day}: 주말 대상일이므로 수집과 저장을 건너뜁니다.')
+            return 0
         key = os.environ.get('DART_API_KEY', '').strip()
         if not key:
             raise DartError('DART_API_KEY 환경변수 또는 GitHub Actions Secret을 설정하세요.')
