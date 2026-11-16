@@ -2,7 +2,7 @@ name: DART 장 마감 리포트
 
 on:
   schedule:
-    - cron: '30 11 * * 1-5' # 20:30 Asia/Seoul, Monday-Friday
+    - cron: '0 11 * * 1-5' # 20:00 Asia/Seoul, Monday-Friday
   workflow_dispatch:
     inputs:
       date:

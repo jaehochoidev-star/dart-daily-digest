@@ -153,7 +153,7 @@ def save_report(report, root):
 
 
 def resolve_report_date(explicit_date=None, scheduled_run_created_at=None, now=None):
-    """Use the latest weekday 20:30 KST slot at original run creation, even on reruns."""
+    """Use the latest weekday 20:00 KST slot at original run creation, even on reruns."""
     if explicit_date:
         return date.fromisoformat(explicit_date)
     if scheduled_run_created_at:
@@ -161,7 +161,7 @@ def resolve_report_date(explicit_date=None, scheduled_run_created_at=None, now=N
         if anchor.tzinfo is None:
             raise ValueError('예약 실행 시각에는 시간대가 필요합니다.')
         anchor = anchor.astimezone(KST)
-        slot = anchor.replace(hour=20, minute=30, second=0, microsecond=0)
+        slot = anchor.replace(hour=20, minute=0, second=0, microsecond=0)
         if anchor < slot:
             slot -= timedelta(days=1)
         while slot.weekday() >= 5:
